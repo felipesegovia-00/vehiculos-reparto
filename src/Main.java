@@ -27,25 +27,25 @@ public class Main {
             sc.nextLine();
 
             switch (opcion) {
-                case 1 -> {
+                case 1 -> {// Allan
 
                 }
-                case 2 -> {
+                case 2 -> { // Felipe
 
                 }
-                case 3 -> {
+                case 3 -> {// Bruno
 
                 }
-                case 4 -> {
+                case 4 -> {// Dafne
 
                 }
-                case 5 -> {
+                case 5 -> {// Dante
 
                 }
-                case 6 -> {
+                case 6 -> {// Dante
 
                 }
-                case 7 ->{
+                case 7 ->{// Renato
                 }
             }
 
