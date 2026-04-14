@@ -35,15 +35,14 @@ import java.util.*;
                         registrarMoto(sc, vehiculos);
                     }
                     case 4 -> {// Dafne
-                        System.out.println("\n==== LISTA DE VEHICULOS =====");
                         mostrarVehiculos(vehiculos);
 
                     }
                     case 5 -> {// Dante
-                        listarVehiculos();
+                        listarVehiculos(vehiculos);
                     }
                     case 6 -> {// Dante
-                        marcarNoDisponible();
+                        marcarNoDisponible(sc, vehiculos);
                     }
                     case 7 ->{// Renato
                     }
@@ -58,37 +57,61 @@ import java.util.*;
 
         // OPCION 1 - REGISTRAR CAMION
         public static void registrarCamion(Scanner sc, List<Vehiculo> vehiculos) {
+            System.out.println("\n--- REGISTRAR NUEVO CAMIÓN--------");
+            String patente;
+            boolean patenteDuplicada;
 
-            // pedir patente
-            System.out.println("Ingrese la patente:");
-            String patente = sc.nextLine().trim();
-            // Pedir marca
+            // VALIDAR PATENTE
+            do {
+                patenteDuplicada = false;
+                System.out.println("Ingrese la patente:");
+                patente = sc.nextLine().trim();
+
+                if (patente.isEmpty()) {
+                    System.out.println("Error: La patente no puede estar vacía.");
+                } else {
+                    for (Vehiculo v : vehiculos) {
+                        if (v.getPatente().equalsIgnoreCase(patente)) {
+                            patenteDuplicada = true;
+                            System.out.println("Error: La patente ya está registrada.");
+                            break;
+                        }
+                    }
+                }
+            } while (patente.isEmpty() || patenteDuplicada);
+
             System.out.print("Ingrese marca: ");
             String marca = sc.nextLine().trim();
-            // Pedir modelo
+
             System.out.print("Ingrese modelo: ");
             String modelo = sc.nextLine().trim();
-            // pedir capacidad
-            System.out.println("Ingrese la capacidad de carga (kg): ");
-            Double capacidad = sc.nextDouble();
-            if (capacidad > 0 ) {
-                System.out.println("");
-            } else {
-                System.out.println("La cantidad de carga que llevas no puede ser negativa.");
-            }
-            // pedir ejes
-            int ejes = 0;
-            System.out.println("Ingrese la cantidad de ejes de su vehiculo: ");
-            ejes = sc.nextInt();
-            if (ejes > 1 ) {
-                System.out.println("");
-            } else {
-                System.out.println("Cantidad de ejes erronea, debes ingresar ejes mayor a 1.");
-            }
 
+            // VALIDAR CAPACIDAD
+            double capacidad;
+            do {
+                System.out.print("Ingrese la capacidad de carga (kg): ");
+                capacidad = sc.nextDouble();
+                if (capacidad <= 0) {
+                    System.out.println("Error: Debe ser mayor a 0.");
+                }
+            } while (capacidad <= 0);
 
-            System.out.println( "informacion del camion registrado: " + patente + " | " + marca + " | " + modelo + " | " + capacidad + "kg | " + ejes + " ejes" );
+            // VALIDAR EJES
+            int ejes;
+            do {
+                System.out.print("Ingrese la cantidad de ejes: ");
+                ejes = sc.nextInt();
+                if (ejes <= 1) {
+                    System.out.println("Error: Debe ser mayor a 1.");
+                }
+            } while (ejes <= 1);
 
+            sc.nextLine();
+
+            Camion camion = new Camion(patente, marca, modelo, capacidad, true, ejes);
+            vehiculos.add(camion);
+
+            System.out.println("Camión registrado correctamente.");
         }
 
         // OPCION 2 - REGISTRAR FURGON
@@ -148,30 +171,64 @@ import java.util.*;
 
       
       
-        // OPCION 3 - REGISTRAR MOTOR REPARTO
+        // OPCION 3 - REGISTRAR MOTO REPARTO
         public static void registrarMoto(Scanner sc, List<Vehiculo> vehiculos) {
-            // pedir patente
-            System.out.println("Ingrese la patente:");
-            String patente = sc.nextLine().trim();
-            // Pedir marca
+            System.out.println("\n--- REGISTRAR NUEVO MOTO REPARTO");
+            String patente;
+            boolean patenteDuplicada;
+
+            // VALIDAR PATENTE
+            do {
+                patenteDuplicada = false;
+                System.out.print("Ingrese la patente:");
+                patente = sc.nextLine().trim();
+
+                if (patente.isEmpty()) {
+                    System.out.println("Error: La patente no puede estar vacía.");
+                } else {
+                    for (Vehiculo v : vehiculos) {
+                        if (v.getPatente().equalsIgnoreCase(patente)) {
+                            patenteDuplicada = true;
+                            System.out.println("Error: La patente ya está registrada.");
+                            break;
+                        }
+                    }
+                }
+            } while (patente.isEmpty() || patenteDuplicada);
+
             System.out.print("Ingrese marca: ");
             String marca = sc.nextLine().trim();
-            // Pedir modelo
+
             System.out.print("Ingrese modelo: ");
             String modelo = sc.nextLine().trim();
-            // pedir caja termica
-            System.out.println("Tiene caja termina S/N: ");
+
+            // VALIDAR CAPACIDAD (opcional pero mejor)
+            double capacidad;
+            do {
+                System.out.print("Ingrese capacidad de carga (kg): ");
+                capacidad = sc.nextDouble();
+                if (capacidad < 0) {
+                    System.out.println("Error: No puede ser negativa.");
+                }
+            } while (capacidad < 0);
+
+            sc.nextLine();
+
+            System.out.print("Tiene caja térmica S/N: ");
             String ct = sc.nextLine().trim().toUpperCase();
             boolean tieneCaja = ct.equals("S");
 
-            System.out.println( "informacion de la moto registrada: " + patente + " | " + marca + " | " + modelo + " | " + tieneCaja );
+            MotoReparto moto = new MotoReparto(patente, marca, modelo, capacidad, true, tieneCaja);
+            vehiculos.add(moto);
 
+            System.out.println("Moto registrada correctamente.");
         }
       
       
       
         // OPCION 4 - MOSTRAR VEHICULOS
         public static void mostrarVehiculos(List<Vehiculo> vehiculos){
+            System.out.println("\n---------- LISTA DE VEHICULOS ----------");
             if(vehiculos.isEmpty()){
                 System.out.println("No hay vehiculos registrados");
                 return;
@@ -184,33 +241,57 @@ import java.util.*;
       
       
 
-        // OPCION 5
-            private static void listarVehiculos(){
-                if(vehiculos.isEmpty()){
-                    System.out.println("No hay vehiculos registrados.");
-                    return;
-                }
-                System.out.println("\n---Listado de Vehiculos ---");
-                for (Vehiculo v : vehiculos){
-                    if (v.isDisponible()){
-                        v.mostrarDetalle(); //Polimorfismo cada hijo responde a su manera
-                    }
-                }
+        // OPCION 5 - MOSTRAR VEHICULOS DISPONIBLES
+        private static void listarVehiculos(List<Vehiculo> vehiculos){
+            System.out.println("\n---------- LISTA DE VEHICULOS DISPONIBLES ----------");
+            if(vehiculos.isEmpty()){
+                System.out.println("No hay vehiculos registrados.");
+                return;
             }
-      
 
-        // OPCION 6
-        private static void marcarNoDisponible(){
-            System.out.println("Ingrese la patente del vehiculo: ");
-            String patente = sc.nextLine();
-            for (Vehiculo v: vehiculos) {
-                if (v.getPatente().equalsIgnoreCase(patente)){
-                    v.setDisponible(false); //Uso del setter
-                    System.out.println("El vehiculo con patente " + patente + " ahora no esta disponible.");
+            System.out.println("\n---Listado de Vehiculos ---");
+
+            boolean hayDisponibles = false;
+
+            for (Vehiculo v : vehiculos){
+                if (v.isDisponible()){
+                    v.mostrarDetalle();
+                    hayDisponibles = true;
+                }
+            }
+
+            if (!hayDisponibles){
+                System.out.println("No hay vehiculos disponibles.");
+            }
+        }
+
+
+        // OPCION 6 - MARCAR VEHICULO COMO NO DISPONIBLE
+        private static void marcarNoDisponible(Scanner sc, List<Vehiculo> vehiculos) {
+
+            System.out.println("Ingrese la patente del vehículo: ");
+            String patente = sc.nextLine().trim();
+
+            if (patente.isEmpty()) {
+                System.out.println("Error: La patente no puede estar vacía.");
+                return;
+            }
+
+            for (Vehiculo v : vehiculos) {
+                if (v.getPatente().equalsIgnoreCase(patente)) {
+
+                    if (!v.isDisponible()) {
+                        System.out.println("El vehículo ya está marcado como no disponible.");
+                        return;
+                    }
+
+                    v.setDisponible(false);
+                    System.out.println("El vehículo con patente " + patente + " ahora no está disponible.");
                     return;
                 }
             }
-            System.out.println("Error: No se encontro un vehiculo con esa patente.");
+
+            System.out.println("Error: No se encontró un vehículo con esa patente.");
         }
 
     }
